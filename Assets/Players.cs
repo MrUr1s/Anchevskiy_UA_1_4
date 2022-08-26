@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Players : MonoBehaviour
 {
     protected Vector3 start_pos;
-    protected List<GameObject> primitives;
+    protected List<GameObject> primitives=new List<GameObject>();
     [SerializeField] protected PrimitiveType primitive = PrimitiveType.Cylinder;
     [SerializeField] protected float _speed = 1f;
     [SerializeField] protected float expectation_time = 1f;
@@ -39,7 +39,7 @@ public abstract class Players : MonoBehaviour
         {
             if (i >= _way.Count)
                 i = 0;
-            transform.position = Vector3.MoveTowards(transform.position, _way[i], _speed);
+            transform.position = Vector3.MoveTowards(transform.position, _way[i], _speed*Time.deltaTime);
             if (transform.position == _way[i])
             {
                 i++;
@@ -47,8 +47,9 @@ public abstract class Players : MonoBehaviour
                 temp.transform.localScale *= 0.3f;
                 temp.transform.position = transform.position;
                 primitives.Add(temp);
+                yield return new WaitForSeconds(expectation_time);
             }
-            yield return new WaitForSeconds(expectation_time);
+            yield return new WaitForEndOfFrame();
         }
     }
 }
